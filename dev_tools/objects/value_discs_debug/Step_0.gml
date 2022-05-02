@@ -1,0 +1,2 @@
+/// @desc 
+CHECK_DEBUG_SWITCH
