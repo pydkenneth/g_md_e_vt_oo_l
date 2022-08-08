@@ -1,0 +1,6 @@
+﻿id,letters,id_NextParagraph,isQuestion,decision
+1,this is first line,2,0,-1
+2,second line,3,0,-1
+3,2rd line,4,0,-1
+4,4th line,5,0,-1
+5,5th line,0,0,-1
