@@ -1,33 +1,23 @@
-function String2Sprite(_str, _sprAsset){
-    var _len = string_length(_str);
-    var _h_char = sprite_get_height(_sprAsset);
-    var _w_char = sprite_get_width(_sprAsset);
-    var _surface_synth = surface_create(_w_char*_len,_h_char);
-    surface_set_target(_surface_synth);
-    
-    var _c, _uni, _subimage;
-    for(var _i=1;_i<=_len;_i++;){
-        _c = string_char_at(_str, _i);
-        _subimage = ord(_c)-32;//from unicode
-        draw_sprite(_sprAsset, _subimage, (_i-1)*_w_char,0);
-    }
-    
-    var _sprite_synth = sprite_create_from_surface(_surface_synth, 0, 0, _w_char*_len, _h_char, true, false, 0, 0);
-    draw_clear_alpha(c_black,0);
-    surface_reset_target();
-    
-    surface_free(_surface_synth);
-    return _sprite_synth;
-}
+//How to use particle tool:
+//1.create "psysSynth" in create event. And psysSynth.psys can be adjusted with GM part_system_xxx funcitons.
+//2.create "ptypeText_Creator" in create event
+//3.In step event, call "Recycle_Psys_Synth(...)" for preventing memory leak.
+//4.In draw event, call "Text_Particle_Create(...)" when you need it.
+//NOTE: Call Text_Particle_Create too fast may cause performance issue.
 
+//WARNING: DO NOT EDIT CODE BELOW
 function psysSynth() constructor{
     psys = part_system_create();
-    ptypesPlaying = array_create();
+    ptypesPlaying = array_create();//private
+    sprsSynth = array_create();//private
     function Particle_Create(_x,_y,_ptype){
         part_particles_create(psys,_x,_y,_ptype,1);
         var _index = array_length(ptypesPlaying);
         array_insert(ptypesPlaying, _index, _ptype);
         return;
+    }
+    function AddSprPlaying(_spr){
+        array_push(sprsSynth, _spr);
     }
 }
 
@@ -38,21 +28,40 @@ function ptypeText_Creator(_spr, _setting) constructor{
         var _ptype = part_type_create();
         var _sprSynth = String2Sprite(_text, spr);
         setting(_ptype,_sprSynth);
-        return _ptype;
+        return [_ptype, _sprSynth];
     }
 }
 
 function Text_Particle_Create(_psysText, _x, _y, _ptypeText_Creator, _text){
-    var _ptype = _ptypeText_Creator.create(_text);
+    var _config = _ptypeText_Creator.create(_text);
+    var _ptype = _config[0]; var _sprSynth = _config[1];
     _psysText.Particle_Create(_x, _y, _ptype);
+    _psysText.AddSprPlaying(_sprSynth);
 }
 
+//Clear dynamic particle types, dynamic sprite for preventing memory leak
 function Recycle_Psys_Synth(_psysSynth){
-    if(part_particles_count(_psysSynth) != 0){return;}
+    var _MAX_LENGTH = 120;//maximum amount of dynamic sprites
+    var _count = part_particles_count(_psysSynth.psys);
     var _len = array_length(_psysSynth.ptypesPlaying);
-    for (var _i = _len-1; _i >= 0; _i--){
-            part_type_destroy(_psysSynth.ptypesPlaying[_i]);
-            array_delete(_psysSynth.ptypesPlaying, _i, 1);
+    
+    if((_count == 0)&&(_len == 0)){return;}
+
+    if (_count < _len){//some particles has finished playing
+        for (var _i = _len-_count; _i > 0; _i--){
+            part_type_destroy(_psysSynth.ptypesPlaying[0]);
+            array_delete(_psysSynth.ptypesPlaying, 0, 1);
+            sprite_delete(_psysSynth.sprsSynth[0]);
+            array_delete(_psysSynth.sprsSynth, 0, 1);
+        }
     }
-    part_system_clear(_psysSynth.psys);
+    else if(_MAX_LENGTH <=_len){//prevent user calling too fast
+        var _len = array_length(_psysSynth.ptypesPlaying);
+        for (var _i = _len-(_MAX_LENGTH/2); _i >= 0; _i--){
+            part_type_destroy(_psysSynth.ptypesPlaying[0]);
+            array_delete(_psysSynth.ptypesPlaying, 0, 1);
+            sprite_delete(_psysSynth.sprsSynth[0]);
+            array_delete(_psysSynth.sprsSynth, 0, 1);
+        }
+    }
 }

@@ -1,3 +1,2 @@
 /// @desc 
-
-//Recycle_Psys_Synth(psysText);
+Recycle_Psys_Synth(psysText);

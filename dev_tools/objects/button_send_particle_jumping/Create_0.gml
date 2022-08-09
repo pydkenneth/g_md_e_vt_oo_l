@@ -26,7 +26,7 @@ prv = {
     push_button : 1, //DO NOT EDIT
     
     //USER DEFINE STYLE:
-    typeButton : 1, //0:toggle, 1:pushbutton
+    typeButton : 0, //0:toggle, 1:pushbutton
     width : 96,
     height : 48,
     c_NotPressed : c_green,

@@ -6,7 +6,7 @@
     "path": "folders/particle_tools.yy",
   },
   "resourceVersion": "1.0",
-  "name": "scr_psetting",
+  "name": "scr_string2sprite",
   "tags": [],
   "resourceType": "GMScript",
 }
