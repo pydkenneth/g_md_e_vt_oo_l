@@ -93,3 +93,55 @@ function Draw_Rectangle_Spr(_x,_y,_width,_height,_color, _centered = false){
     draw_sprite_stretched(spr_point, 0, _x-(_centered?_width/2:0), _y-(_centered?_width/2:0), _width, _height);
     Draw_Reset();
 }
+
+function Add_Vec_Cartesian(_x1,_y1,_x2,_y2){
+    return [(_x1 + _x2), (_y1 + _y2)];
+}
+
+function Add_Vec_Polar(_r1,_phi1,_r2,_phi2){
+    //TODO: check result
+    var _theta = Get_Angle_Vec_Polar(_phi1, _phi2);
+    
+    var _r = sqrt(
+        sqr(_r1 + _r2*dcos(_theta))
+        +
+        sqr(_r2*dsin(_theta))
+    );
+    
+    var _phi = arctan(
+        _r2 * dsin(_theta) / (
+            _r2 * dcos(_theta) + _r1
+        )
+    )
+    
+    return [_r, _phi];
+}
+
+function Dot_Vec_Cartesian(_x1,_y1,_x2,_y2){
+    return (_x1*_x2) + (_y1*_y2);
+}
+
+function Dot_Vec_Polar(_r1,_dphi1,_r2,_dphi2){
+    return (_r1 * _r2 / dcos(Get_Angle_Vec_Polar(_dphi1,_dphi2)));
+}
+
+function Get_Angle_Vec_Cartesian(_x1,_y1,_x2,_y2){
+    var _dot = Dot_Vec_Cartesian(_x1,_y1,_x2,_y2);
+    var _len1 = sqrt(sqr(_x1)+sqr(_y1));
+    var _len2 = sqrt(sqr(_x2)+sqr(_y2));
+    //_dot = _len1 * _len2 * cos(t);
+    var _theta = darccos(_dot /_len1 /_len2);
+    return _theta;
+
+    //TODO: need check result
+    var _ang1 = darctan(_y1/_x1);
+    var _ang2 = darctan(_y2/_x2);
+    return Get_Angle_Vec_Polar(_ang1,_ang2);
+}
+
+function Get_Angle_Vec_Polar(_dphi1, _dphi2){
+    //NOTICE: in degree
+    return angle_difference(_dphi1, _dphi2);
+}
+
+function DoNothing(){return 0;}

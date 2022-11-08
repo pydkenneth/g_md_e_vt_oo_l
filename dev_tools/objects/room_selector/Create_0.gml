@@ -1,10 +1,17 @@
 /// @desc 
-//names of choices
-namesChoice[0] = "Room1";roomsChoice[0] = Room1;
-namesChoice[1] = "rm_particle";roomsChoice[1] = rm_particle;
-//namesChoice[2] = "two";
-//namesChoice[3] = "";
+#region declare functions
+function Add_Room(_idRoom, _nameRoom="-"){
+    array_push(namesChoice, _nameRoom);
+    array_push(roomsChoice, _idRoom);
+}
+#endregion
 
+//names of choices
+namesChoice = array_create();roomsChoice = array_create();//DO NOT EDIT
+
+Add_Room(Room1,"Room1");
+Add_Room(rm_particle, "rm_particle");
+Add_Room(rm_statemachine, "statemachine");
 choiceCurrent = 0;
 
 prv = {

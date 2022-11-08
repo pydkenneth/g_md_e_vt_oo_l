@@ -17,6 +17,7 @@ TriggerAction = function(){
     var _y = y;
     Text_Particle_Create(psysText, _x, _y, ptypeCreator, text);
     effect_create_above(ef_ring, _x, _y,0,c_red);
+    inst_notice.Emit("Emit!!");
     return;
 }
 
