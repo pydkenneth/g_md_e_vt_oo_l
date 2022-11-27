@@ -1,6 +1,6 @@
 /// @desc 
 #region generate statemachine
-
+/*
 machine = new statemachine();
 
 stateSrc = new state();
@@ -16,7 +16,7 @@ transToSrc = new transition();
 array_push(machine.states, stateSrc);
 array_push(machine.states, stateDest);
 array_push(machine.trans, trans1);
-
+*/
 #endregion
 
 
@@ -59,9 +59,18 @@ struct2 = {
 structs[0]=struct;
 structs[1]=struct2;
 
-structs[0].Draw_Me = function(){//function belong to obj, then assign to struct
-    me = "structs[0]";//obj.me
-    draw_text(50, 150, me);
+with(structs[0]){
+    Draw_Me = function(){
+        me = "structs[0]";
+        draw_text(50, 150, me);
+    }
+}
+
+with(structs[1]){
+    Draw_Me = function(){
+        me = "structs[0]";
+        draw_text(350,0,me);
+    }
 }
 
 with(struct){//region in struct

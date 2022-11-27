@@ -69,7 +69,7 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "dev_tools",
-    "path": "folders/dev_tools.yy",
+    "name": "group_notice",
+    "path": "folders/dev_tools/group_notice.yy",
   },
 }

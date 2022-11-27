@@ -99,21 +99,10 @@ function Add_Vec_Cartesian(_x1,_y1,_x2,_y2){
 }
 
 function Add_Vec_Polar(_r1,_phi1,_r2,_phi2){
-    //TODO: check result
-    var _theta = Get_Angle_Vec_Polar(_phi1, _phi2);
-    
-    var _r = sqrt(
-        sqr(_r1 + _r2*dcos(_theta))
-        +
-        sqr(_r2*dsin(_theta))
-    );
-    
-    var _phi = arctan(
-        _r2 * dsin(_theta) / (
-            _r2 * dcos(_theta) + _r1
-        )
-    )
-    
+    var _pReal = _r1*dcos(_phi1) + _r2*dcos(_phi2);
+    var _pImage = _r1*dsin(_phi1) + _r2*dsin(_phi2);
+    var _r = sqrt(sqr(_pReal) + sqr(_pImage));
+    var _phi = darctan(_pImage / _pReal);
     return [_r, _phi];
 }
 
@@ -122,26 +111,19 @@ function Dot_Vec_Cartesian(_x1,_y1,_x2,_y2){
 }
 
 function Dot_Vec_Polar(_r1,_dphi1,_r2,_dphi2){
-    return (_r1 * _r2 / dcos(Get_Angle_Vec_Polar(_dphi1,_dphi2)));
+    return (_r1 * _r2 * dcos(abs(angle_difference(_dphi1,_dphi2))));
 }
 
-function Get_Angle_Vec_Cartesian(_x1,_y1,_x2,_y2){
-    var _dot = Dot_Vec_Cartesian(_x1,_y1,_x2,_y2);
-    var _len1 = sqrt(sqr(_x1)+sqr(_y1));
-    var _len2 = sqrt(sqr(_x2)+sqr(_y2));
-    //_dot = _len1 * _len2 * cos(t);
-    var _theta = darccos(_dot /_len1 /_len2);
-    return _theta;
-
-    //TODO: need check result
-    var _ang1 = darctan(_y1/_x1);
-    var _ang2 = darctan(_y2/_x2);
-    return Get_Angle_Vec_Polar(_ang1,_ang2);
+function Cartesian2Polar(_x,_y){//NOTICE: for -y direction
+    var _r = sqrt(sqr(_x) + sqr(_y));
+    var _phi = darctan(-_y/_x);
+    return [_r,_phi];
 }
 
-function Get_Angle_Vec_Polar(_dphi1, _dphi2){
-    //NOTICE: in degree
-    return angle_difference(_dphi1, _dphi2);
+function Polar2Cartesian(_r, _phi){//NOTICE: for -y direction
+    var _x = _r * dcos(_phi);
+    var _y = -_r * dsin(_phi);
+    return [_x,_y];
 }
 
 function DoNothing(){return 0;}
