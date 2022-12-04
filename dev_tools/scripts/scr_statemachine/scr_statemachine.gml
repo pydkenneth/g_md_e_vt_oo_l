@@ -1,8 +1,6 @@
 function statemachine() constructor{//DO NOT EDIT
     states = array_create();
-    statesNext = array_create();
     trans = array_create();
-    Step = function(){}
     
     Clear_Active_States = function(){//fixed, DO NOT EDIT
         var _len = array_length(states);
@@ -20,15 +18,18 @@ function statemachine() constructor{//DO NOT EDIT
         Clear_Active_States();
         var _len, _i;
         
-        //_len = array_length(statesNext);
-        //for(_i = _len-1; 0<=_i; _i--){
-        //    statesNext[_i].isActive = true;
-        //}
+        _len = array_length(states);
+        for(_i = _len-1; 0<=_i; _i--){
+            if(states[_i].wasDu){
+                states[_i].isActive = true;
+                states[_i].wasDu = false;
+            }
+        }
         
         _len = array_length(trans);
         for(_i = _len-1; 0<=_i; _i--){
             if(trans[_i].ableTransit){
-                trans[_i].destState.isActive = true;
+                trans[_i].stateDest.isActive = true;
                 trans[_i].ableTransit = false;
             }
         }
@@ -46,33 +47,37 @@ function statemachine() constructor{//DO NOT EDIT
         Update_Active_States();
     }
     
+    /*
     static Link = function(_src, _trans, _dest){//DO NOT EDIT
         _trans.stateSrc = _src;
         _trans.stateDest = _dest;
         array_push(_src.trans,_trans);
     }
+    */
 }
 
 function state() constructor{
     trans = array_create();//user overwrite after create
-    EntryAction = function(){}//user overwrite after create
-    DuringAction = function(){}//user overwrite after create
-    ExitAction = function(){}//user overwrite after create
+    En = function(){}//user overwrite after create
+    Du = function(){}//user overwrite after create
+    Ex = function(){}//user overwrite after create
     
     isActive = false;//DO NOT EDIT
-    Step = function(){//DO NOT EDIT
+    wasDu = false;
+    static Step = function(){//DO NOT EDIT
         if(isActive==false){return;}
         
         //checking trans
         var _len, _i, _stop;
         _len = array_length(trans);
-        for(_i=_len-1; 0<=_i; i--){
+        for(_i=_len-1; 0<=_i; _i--){
             _stop = trans[_i].Step();
             if(_stop){return;}
         }
         
         //no trans available, Do During Action
-        state.DuringAction();
+        Du();
+        wasDu = true;
     }
 }
 
@@ -86,9 +91,10 @@ function transition() constructor{
     static Step = function(){//DO NOT EDIT
         if(Condition()){
             ConditionAction();
-            stateSrc.ExitAction();
+            stateSrc.Ex();
             stateSrc.isActive = false;
-            stateDest.EntryAction();
+            stateSrc.wasDu = false;
+            stateDest.En();
             ableTransit = true;
             return true;//_stop for checking trans by state
         }
@@ -96,4 +102,10 @@ function transition() constructor{
             return false;
         }
     }
+}
+
+function Link_States_Trans(_stateSrc,_trans,_stateDest){
+    array_push(_stateSrc.trans,_trans);
+    _trans.stateSrc = _stateSrc;
+    _trans.stateDest = _stateDest;
 }

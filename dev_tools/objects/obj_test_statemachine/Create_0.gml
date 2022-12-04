@@ -1,22 +1,52 @@
 /// @desc 
 #region generate statemachine
-/*
-machine = new statemachine();
 
-stateSrc = new state();
+transToX = new transition();
+transToX.Condition = function(){
+    return keyboard_check_pressed(ord("X"));
+}
+transToX.ConditionAction = function(){
+    inst_trans.Emit("X, ->", 60*5);
+}
 
-stateDest = new state();
+transToZ = new transition();
+transToZ.Condition = function(){
+    return keyboard_check_pressed(ord("Z"));
+}
+transToZ.ConditionAction = function(){
+    inst_trans.Emit("Z, <-", 60*5);
+}
 
-transToDest = new transition();
-transToDest.Set_Src(stateSrc);
-transToDest.Set_Src()
-transToSrc = new transition();
+waitingZ = new state();
+waitingZ.En = function(){
+    inst_z.Emit("En", 60*5);
+}
+waitingZ.Du = function(){
+    inst_z.Emit("Du", 60*5);
+}
+waitingZ.Ex = function(){
+    inst_z.Emit("Ex", 60*5);
+}
 
+waitingX = new state();
+waitingX.En = function(){
+    inst_x.Emit("En", 60*5);
+}
+waitingX.Du = function(){
+    inst_x.Emit("Du", 60*5);
+}
+waitingX.Ex = function(){
+    inst_x.Emit("Ex", 60*5);
+}
 
-array_push(machine.states, stateSrc);
-array_push(machine.states, stateDest);
-array_push(machine.trans, trans1);
-*/
+Link_States_Trans(waitingZ,transToX,waitingX);
+Link_States_Trans(waitingX,transToZ,waitingZ);
+
+sm = new statemachine();
+array_push(sm.states,waitingZ,waitingX);
+array_push(sm.trans, transToX,transToZ);
+sm.Init_State();
+
 #endregion
 
 

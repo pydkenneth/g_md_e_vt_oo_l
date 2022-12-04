@@ -1,10 +1,10 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "text_x",
+  "name": "notice_x",
   "spriteId": {
-    "name": "spr_debug_text_48x18",
-    "path": "sprites/spr_debug_text_48x18/spr_debug_text_48x18.yy",
+    "name": "spr_notice_dev",
+    "path": "sprites/spr_notice_dev/spr_notice_dev.yy",
   },
   "solid": false,
   "visible": true,
@@ -25,13 +25,14 @@
   "physicsKinematic": false,
   "physicsShapePoints": [],
   "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":0,"eventType":8,"collisionObjectId":null,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":0,"eventType":3,"collisionObjectId":null,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":0,"eventType":8,"collisionObjectId":null,},
   ],
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "debug_parents",
-    "path": "folders/debug_tools/debug_parents.yy",
+    "name": "group_rm_statemachine",
+    "path": "folders/Rooms/group_rm_statemachine.yy",
   },
 }
