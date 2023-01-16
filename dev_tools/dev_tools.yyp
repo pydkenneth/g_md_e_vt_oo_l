@@ -4,7 +4,7 @@
   "name": "dev_tools",
   "resources": [
     {"id":{"name":"button_send_particle_moving","path":"objects/button_send_particle_moving/button_send_particle_moving.yy",},"order":2,},
-    {"id":{"name":"Script4","path":"scripts/Script4/Script4.yy",},"order":11,},
+    {"id":{"name":"scr_test_load_csv","path":"scripts/scr_test_load_csv/scr_test_load_csv.yy",},"order":11,},
     {"id":{"name":"spr_text_rise_debug","path":"sprites/spr_text_rise_debug/spr_text_rise_debug.yy",},"order":17,},
     {"id":{"name":"sys_linker_dev","path":"objects/sys_linker_dev/sys_linker_dev.yy",},"order":12,},
     {"id":{"name":"spr_statemachine","path":"sprites/spr_statemachine/spr_statemachine.yy",},"order":4,},
@@ -72,6 +72,7 @@
     {"id":{"name":"button_send_particle_bursting","path":"objects/button_send_particle_bursting/button_send_particle_bursting.yy",},"order":1,},
     {"id":{"name":"inputtext_debug","path":"objects/inputtext_debug/inputtext_debug.yy",},"order":11,},
     {"id":{"name":"placard_dev","path":"objects/placard_dev/placard_dev.yy",},"order":0,},
+    {"id":{"name":"scr_collide_map","path":"scripts/scr_collide_map/scr_collide_map.yy",},"order":15,},
     {"id":{"name":"rm_statemachine","path":"rooms/rm_statemachine/rm_statemachine.yy",},"order":5,},
     {"id":{"name":"checkbox_debug","path":"objects/checkbox_debug/checkbox_debug.yy",},"order":5,},
     {"id":{"name":"spr_linker_dev","path":"sprites/spr_linker_dev/spr_linker_dev.yy",},"order":14,},
@@ -137,6 +138,6 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"paragraphs_dev.csv","CopyToMask":-1,"filePath":"datafiles",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.11.0.54",
+    "IDEVersion": "2022.11.1.56",
   },
 }

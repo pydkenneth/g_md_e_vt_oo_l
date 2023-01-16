@@ -2,9 +2,11 @@
 #region generate statemachine
 
 transToX = new transition();
+
 transToX.Condition = function(){
     return keyboard_check_pressed(ord("X"));
 }
+
 transToX.ConditionAction = function(){
     inst_trans.Emit("X, ->", 60*5);
 }
@@ -20,6 +22,12 @@ transToZ.ConditionAction = function(){
 waitingZ = new state();
 waitingZ.En = function(){
     inst_z.Emit("En", 60*5);
+    with(self){
+        inst_z.Emit("En", 60*5);
+        var _id = other;
+        var _self = self;
+        return;
+    }
 }
 waitingZ.Du = function(){
     inst_z.Emit("Du", 60*5);
@@ -51,44 +59,34 @@ sm.Init_State();
 
 
 #region test struct
-me = "intObj"
+me = "instObj"
+foo = function(){
+    inst_self.Emit("Self:" + self.me);
+    inst_other.Emit("Other:" + other.me);
+}
 struct = {
-    x:456,
-    y:123,
-    me: "instStruct1",
-    Draw_Me : function(){
-        draw_text(50,0,me);//instStruct
-    },
-    Draw_Me_Self : function(){
-        draw_text(50, 50, self.me);//instStruct
-    },
-    Draw_Me_Other : function(){
-        draw_text(50, 100, other.me);//intObj
-    },
-    
-    inner_struct:{
-        me: "inst inner",
-        Draw_Me : function(){
-            draw_text(250,0,me);//inst inner
+    me: "instStruct",
+    instObj:-1,
+    foo : function(){
+        inst_self.Emit("Self:" + self.me);
+        inst_other.Emit("Other:" + other.me);
         },
-        Draw_Me_Self : function(){
-            draw_text(250, 50, self.me);//inst inner
-        },
-        Draw_Me_Other : function(){
-            draw_text(250, 100, other.me);//intObj
+    callfoo:-1,
+    innerstruct:{
+        me: "innerstruct",
+        instObj:-1,
+        foo : function(){
+        inst_self.Emit("Self:" + self.me);
+        inst_other.Emit("Other:" + other.me);
         }
     }
 };
-struct2 = {
-    me: "instStruct2",
-    Draw_Me : function(){
-        draw_text(350, 0, me);
-    }
-}
+innerstruct = struct.innerstruct;
+struct.instObj = self;
+struct.innerstruct.instObj = self;
+struct.callfoo = struct.foo;
 
-structs[0]=struct;
-structs[1]=struct2;
-
+/*
 with(structs[0]){
     Draw_Me = function(){
         me = "structs[0]";
@@ -109,6 +107,6 @@ with(struct){//region in struct
         draw_text(50,150,me);
     }
 }
-
+*/
 
 #endregion

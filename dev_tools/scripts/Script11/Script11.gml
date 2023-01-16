@@ -8,3 +8,7 @@ function Create_Playcard_Stage3(){
         VisibleCondition = inst.IsPlayerNear;
     }
 }
+
+function AI_NPC_XXX(){
+
+}
