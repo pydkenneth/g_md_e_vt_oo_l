@@ -127,3 +127,13 @@ function Polar2Cartesian(_r, _phi){//NOTICE: for -y direction
 }
 
 function DoNothing(){return 0;}
+
+function Array_Find_Index_Ele(_array, _ele){
+    var _len = array_length(_array);
+    for(var _i=0; _i<_len; _i++){
+        if(_array[_i] == _ele){
+            return _i;
+        }
+    }
+    return -1;
+}
