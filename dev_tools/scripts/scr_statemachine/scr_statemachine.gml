@@ -70,15 +70,7 @@ function statemachine(_name) constructor{//DO NOT EDIT
         return;
     }
 
-    Do_Actions = function(_actions){
-        var _len = array_length(_actions);
-        var _earlyReturn = false;
-        for(var _i=0; _i<_len; _i++){
-            _earlyReturn = _actions[_i].contents();
-            if((_actions[_i].type == "SEND")&&(_earlyReturn == true)){return true;}
-        }
-        return false;
-    }
+
     
     static Get_States_Brother = function(_state){return _state.parent.states;}
     
@@ -234,16 +226,16 @@ function statemachine(_name) constructor{//DO NOT EDIT
     }
     
     Enter_State = Enter_State_Steps[0];
-    #region Enter State Steps END //////////////
+    #endregion Enter State Steps END //////////////
     
     Exe_Set_Flow_Chart = function(_transes, _event = -1){
         var _transesCurrent = _transes;
-        var _breakWhile = false;
+        var _evaluating = true;
         var _step = 1;
         var _pathTrans = array_create();
         var _idTranses, _transCurrent, _isValidTrans, _isValidEvent, _earlyReturn, _lastPath
         var _stateParentPath, _childrenExit;
-        while(_breakWhile == false){
+        while(_evaluating){
             switch(_step){
             case 1:
                 //set _transesCurrent
@@ -272,41 +264,137 @@ function statemachine(_name) constructor{//DO NOT EDIT
                     //FALLTHROUGH
                 }
                 else{
-                    if(_idTranses == array_length(_transesCurrent)-1){
-                        _step = 2;
-                        break;
-                    }
-                    else{
-                        if(_transesCurrent == _transes){//last trans of initial set,stop evaluation
-                            _breakWhile = true;
-                            break;
+                    while(1){
+                        if(_idTranses == array_length(_transesCurrent)-1){//last trans in transes set
+                            if(_transesCurrent == _transes){//is the initial transes set tested
+                                _evaluating = false;
+                                break;
+                            }
+                            else{//bracktracking
+                                _lastPath = array_pop(_pathTrans);
+                                _transesCurrent = _lastPath.src.transes;
+                                _idTranses = Array_Find_Index_Ele(_transesCurrent, _lastPath);
+                            }
                         }
-                        else{//is last trans of set,backtracking according to path
-                            _lastPath = array_pop(_pathTrans);
-                            _transesCurrent = _lastPath.src.states;
-                            _idTranses = Array_Find_Index_Ele(_transesCurrent,_lastPath);
+                        else{//test next trans in transes set
                             _step = 2;
                             break;
                         }
                     }
+                    break;
                 }
                 
             case 5:
                 if(_transCurrent.dest.type == "state"){
-                    _breakWhile = true;
+                    _evaluating = false;
                     _transCurrent.dest.pathTrans = _pathTrans;//back trans path
                     _stateParentPath = Get_State_Parent_Trans_Path(_pathTrans);
                     _childrenExit = Get_State_Active_Children(_stateParentPath);
-                    
+                    var _iChildrenExit, _lenChildrenExit;
+                    for(_iChildrenExit=0; _iChildrenExit<_lenChildrenExit; _iChildrenExit++){
+                        _earlyReturn = _childrenExit[_i].DoExit();
+                        if(_earlyReturn){return;}
+                    }
+                    var _lenTransPath;
+                    _lenTransPath = array_length(_pathTrans);
+                    _earlyReturn = _pathTrans[_lenTransPath-1].DoTransitionAction();
+                    if(_earlyReturn){return;}
+                    Enter_State(_transCurrent.dest);
+                    break;
                 }
-            
+                _step = 6;
+                //FALLTHROUGH
+                
+            case 6:
+                if((_transCurrent.dest.type == "junction")
+                &&(0 == array_length(_transCurrent.dest.transesOutgoing))){
+                    _breakWhile = true;
+                    break;
+                }
+                _step = 7;
+                //FALLTHROUGH
+                
+            case 7:
+                _transesCurrent = _dest.transes;
+                _step = 1;
+                break;
             }
         }
     }
+    
+    static Get_State_Parent_Trans_Path = function(_pathTrans){
+        var _parents = array_create();
+        var _i,_len;
+        _len=array_length(_pathTrans);
+        for(_i=0; _i<_len; _i++){
+            array_push(_parents,_pathTrans[_i].src.parent);
+            array_push(_parents,_pathTrans[_i].dest.parent);
+        }
+        
+        var _parentHigher = _parents[0];
+        _len = array_length(_parents);
+        for(var _i = 1;_i<_len;_i++){
+            _parentHigher = Get_Higher_Parent(_parentHigher,_parents[_i]);
+        }
+        return _parentHigher;
+    }
 
-    DoEn = function(_state){}
-    DoDu = function(_state){}
-    DoEx = function(_state){}
+    static Get_Higher_Parent = function(_p1,_p2){
+        if(_p1==_p2){return _p1;}
+        var _branch1 = Get_Family_Branch(_p1);
+        var _branch2 = Get_Family_Branch(_p2);
+        var _parentCommon;
+        for(var _i = 0; _branch1[_i] == _branch2[_i];_i++){
+            _parentCommon = _branch1[_i];
+        }
+        return _parentCommon;
+    }
+    
+    static Get_Family_Branch = function(_node){
+        var _branch = array_create();
+        var _nodeCurrent = _node;
+        while(_nodeCurrent.type != "statemachine"){
+            array_push(_branch,_nodeCurrent);
+            _nodeCurrent = _nodeCurrent.parent;
+        }
+        array_push(_branch,_nodeCurrent);
+        return array_reverse(_branch);
+    }
+    
+    static Get_State_Active_Children = function(_stateParentPath){
+        var _parent = _stateParentPath;
+        if(0 == array_length(_parent.states)){return [ ];}
+        
+        var _childrenActive = array_create();
+        var _len = array_length(_parent.states);
+        for(var _i = 0; _i<_len; _i++){
+            if(_parent.states[_i].isActive == true){
+                array_push(_childrenActive,_parent.states[_i]);
+            }
+        }
+        return _childrenActive;
+    }
+
+    Do_Actions_Entry = function(_state){
+        var _earlyReturn = false;
+        var _len = array_length(_state.actionsEn);
+
+        if(_len == 0){_earlyReturn = false; return _earlyReturn;}
+
+        for(var _i=0; _i<_len; _i++){
+            _state.actionsEn[_i]();
+            if(_state.isActive == false){
+                _earlyReturn = true;
+                break;
+            }
+        }
+
+        return _earlyReturn;
+    }
+    Do_Actions_During = function(_state){}
+    Do_Actions_Exit = function(_state){}
+    Do_Actions_Condition = function(_trans){}
+    Do_Actions_Transition = function(_trans){}
     #endregion ///////////////////////////////////////////////
 }
 
@@ -330,7 +418,7 @@ function state(_name) constructor{
 function transition(_name) constructor{
     name = _name;
     type = "transition";
-    Condition = function(){return true;};
+    Condition = function(){return true;}
     actionsCondition = array_create();
     actionsTransition = array_create();
     src = -1;
