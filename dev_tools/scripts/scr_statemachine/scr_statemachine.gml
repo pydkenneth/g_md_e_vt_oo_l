@@ -1,10 +1,13 @@
 //WARNING: You should NOT modify script below.
 //design graph: simple_statemachine_frame.graphml
+//ref: stateflow user guide 2017b
+//NOTICE: You should NOT edit this script except a bug exists.
 #region Public Constructors & Functions////////////////////////////////
-function statemachine(_name) constructor{//DO NOT EDIT
+function statemachine(_name) constructor{
     #region attributes////////////////////////////////////////
 	decomposition = "OR";
     states = array_create();
+    junctions = array_create();
     transesDefault = array_create();
 	name = _name;
     type = "statemachine";
@@ -16,7 +19,12 @@ function statemachine(_name) constructor{//DO NOT EDIT
     };
     
     WakeUp = function(){
-        var _valid = Exe_Set_Flow_Chart(transesDefault);
+        var _valid = false;
+        
+        if(0 < array_length(transesDefault)){
+            Exe_Set_Flow_Chart(transesDefault);
+        }
+
         if(( _valid == false)&& (decomposition == "AND")){
             var _len = array_length(states);
             for(var _i=0; _i<_len; _i++){
@@ -70,7 +78,14 @@ function statemachine(_name) constructor{//DO NOT EDIT
         return;
     }
 
-
+    function Send_Event(_event, _state){//NOTICE: not public for developers
+        if((_state.type == "state")&&(_state.isActive == false)){return false;}
+    
+        Exe_Active_State(_state, _event);
+    
+        var _earlyReturn = !(_state.isActive);
+        return _earlyReturn;
+    }
     
     static Get_States_Brother = function(_state){return _state.parent.states;}
     
@@ -150,7 +165,8 @@ function statemachine(_name) constructor{//DO NOT EDIT
     
     Enter_State_Steps[1] = function(_state){
         var _parent = _state.parent;
-        if(_parent.isActive == false){
+        if((_parent.type == "state")
+        && (_parent.isActive == false)){
             Enter_State_Steps[1](_parent);
             Enter_State_Steps[2](_parent);
             Enter_State_Steps[3](_parent);
@@ -181,7 +197,7 @@ function statemachine(_name) constructor{//DO NOT EDIT
     }
     
     Enter_State_Steps[4] = function(_state){
-        var _earlyReturn = DoEn(_state);
+        var _earlyReturn = Do_Actions_Entry(_state);
         return _earlyReturn;
     }
     
@@ -257,9 +273,9 @@ function statemachine(_name) constructor{//DO NOT EDIT
                 //FALLTHROUGH
             case 4:
                 if(_isValidTrans){
-                    _earlyReturn = _transCurrent.ConditionAction();
-                    if(_earlyReturn ==true){return;}
                     array_push(_pathTrans,_transCurrent);
+                    _earlyReturn = Do_Actions_Condition(_transCurrent, _pathTrans);
+                    if(_earlyReturn ==true){return;}
                     _step = 5;
                     //FALLTHROUGH
                 }
@@ -290,14 +306,16 @@ function statemachine(_name) constructor{//DO NOT EDIT
                     _transCurrent.dest.pathTrans = _pathTrans;//back trans path
                     _stateParentPath = Get_State_Parent_Trans_Path(_pathTrans);
                     _childrenExit = Get_State_Active_Children(_stateParentPath);
-                    var _iChildrenExit, _lenChildrenExit;
+                    var _iChildrenExit;
+                    var _lenChildrenExit = array_length(_childrenExit);
                     for(_iChildrenExit=0; _iChildrenExit<_lenChildrenExit; _iChildrenExit++){
-                        _earlyReturn = _childrenExit[_i].DoExit();
+                        _earlyReturn = Do_Actions_Exit(_childrenExit[_iChildrenExit]);
                         if(_earlyReturn){return;}
                     }
                     var _lenTransPath;
                     _lenTransPath = array_length(_pathTrans);
-                    _earlyReturn = _pathTrans[_lenTransPath-1].DoTransitionAction();
+                    
+                    _earlyReturn = Do_Actions_Transition(_pathTrans[_lenTransPath-1], _pathTrans);
                     if(_earlyReturn){return;}
                     Enter_State(_transCurrent.dest);
                     break;
@@ -342,11 +360,14 @@ function statemachine(_name) constructor{//DO NOT EDIT
     static Get_Higher_Parent = function(_p1,_p2){
         if(_p1==_p2){return _p1;}
         var _branch1 = Get_Family_Branch(_p1);
+        var _len1 = array_length(_branch1);
         var _branch2 = Get_Family_Branch(_p2);
+        var _len2 = array_length(_branch2);
         var _parentCommon;
-        for(var _i = 0; _branch1[_i] == _branch2[_i];_i++){
+        for(var _i = 0; (_i<=_len1-1)&&(_i<_len2-1)&&(_branch1[_i] == _branch2[_i]);_i++){
             _parentCommon = _branch1[_i];
         }
+        
         return _parentCommon;
     }
     
@@ -376,14 +397,18 @@ function statemachine(_name) constructor{//DO NOT EDIT
     }
 
     Do_Actions_Entry = function(_state){
+        _state.tick = 1;
         var _earlyReturn = false;
         var _len = array_length(_state.actionsEn);
 
-        if(_len == 0){_earlyReturn = false; return _earlyReturn;}
+        if(_len == 0){//no action
+            _earlyReturn = false;
+            return _earlyReturn;
+        }
 
         for(var _i=0; _i<_len; _i++){
             _state.actionsEn[_i]();
-            if(_state.isActive == false){
+            if((_state.type == "state")&&(_state.isActive == false)){
                 _earlyReturn = true;
                 break;
             }
@@ -391,21 +416,123 @@ function statemachine(_name) constructor{//DO NOT EDIT
 
         return _earlyReturn;
     }
-    Do_Actions_During = function(_state){}
-    Do_Actions_Exit = function(_state){}
-    Do_Actions_Condition = function(_trans){}
-    Do_Actions_Transition = function(_trans){}
+    
+    Do_Actions_During = function(_state){
+        _state.tick++;
+        
+        var _earlyReturn = false;
+        var _len = array_length(_state.actionsDu);
+
+        if(_len == 0){//no action
+            _earlyReturn = false;
+            return _earlyReturn;
+        }
+
+        for(var _i=0; _i<_len; _i++){
+            _state.actionsDu[_i]();
+            if((_state == "state")&&(_state.isActive == false)){
+                _earlyReturn = true;
+                break;
+            }
+        }
+
+        return _earlyReturn;
+    }
+    
+    Do_Actions_Exit = function(_state){
+        _state.tick = 0;
+        
+                var _earlyReturn = false;
+        var _len = array_length(_state.actionsEx);
+
+        if(_len == 0){//no action
+            _earlyReturn = false;
+            return _earlyReturn;
+        }
+
+        for(var _i=0; _i<_len; _i++){
+            _state.actionsEx[_i]();
+            if((_state.type == "state")&&(_state.isActive == false)){
+                _earlyReturn = true;
+                break;
+            }
+        }
+
+        return _earlyReturn;
+    }
+    
+    Do_Actions_Condition = function(_trans, _pathTrans){
+        //If the origin state of the inner or outer flow chart 
+        if(_pathTrans[0].isDefault == false){
+            var _state = _pathTrans[0].src;
+        }
+        //or parent state of the default flow chart
+        else if(_pathTrans[0].isDefault == true){
+            var _state = Get_State_Parent_Trans_Path(_pathTrans);
+        }
+
+        var _len = array_length(_trans.actionsCondition);
+        if(_len == 0){//no action
+            _earlyReturn = false;
+            return _earlyReturn;
+        }
+
+        for(var _i=0; _i<_len; _i++){
+            _trans.actionsCondition[_i]();
+            if((_state.type == "state")&&(_state.isActive == false)){//are no longer active at the end of the event broadcast
+                _earlyReturn = true;//the chart does not perform remaining steps for executing the flow chart.
+                break;
+            }
+        }
+        return _earlyReturn;
+    }
+    
+    Do_Actions_Transition = function(_trans, _pathTrans){
+        var _earlyReturn = false;
+        var _state = Get_State_Parent_Trans_Path(_pathTrans);
+        if((_state.type == "state") && (_state.isActive == false)){//If the parent of the transition path is not active
+            _earlyReturn = true;//the chart does not perform remaining transition actions and state entry actions.
+            return _earlyReturn;
+        }
+
+        var _len;
+        _len = array_length(Get_State_Active_Children(_state));// or if that parent has an active child
+        if(0<_len){
+            _earlyReturn = true;//the chart does not perform remaining transition actions and state entry actions.
+            return _earlyReturn;
+        }
+
+        _earlyReturn = false;
+        
+        _len = array_length(_trans.actionsTransition);
+        if(_len == 0){//no action
+            _earlyReturn = false;
+            return _earlyReturn;
+        }
+
+        for(var _i=0; _i<_len; _i++){
+            _trans.actionsTransition[_i]();
+            if((_state.type == "state")&&(_state.isActive == false)){//are no longer active at the end of the event broadcast
+                _earlyReturn = true;//the chart does not perform remaining steps for executing the flow chart.
+                break;
+            }
+        }
+        
+        return _earlyReturn;
+    }
     #endregion ///////////////////////////////////////////////
 }
 
 function state(_name) constructor{
     name = _name;
+    isActive = false;
     type = "state";
     parent = -1;
     states = array_create();
+    junctions = array_create();
     actionsEn = array_create();
     actionsDu = array_create();
-    actioneEx = array_create();
+    actionsEx = array_create();
     tick = 0;
     decomposition = "OR";
     transesDefault = array_create();
@@ -418,19 +545,38 @@ function state(_name) constructor{
 function transition(_name) constructor{
     name = _name;
     type = "transition";
+    isDefault = false;
     Condition = function(){return true;}
+    events = array_create();
     actionsCondition = array_create();
     actionsTransition = array_create();
     src = -1;
     dest = -1;
 }
 
+function Trans_Set_Condition(_trans,_cond){
+    if(is_method(_cond)||script_exists(_cond)){
+        _trans.Condition = _cond;
+    }
+    else{
+        show_error("Err: _cond is not a method or script function", true);
+    }
+}
+
+function Trans_Add_Event(_trans,_event){
+        if(is_string(_event)){
+            array_push(_trans.events,_event);
+        }
+        else{
+            show_error("Err: Add_Event, _event is not a string.",true);
+        }
+}
+
 function junction(_name) constructor{
     name = _name;
     type = "junction";
-    src = -1;
-    dest = -1;
-    transOuter = array_create();
+    transesOuter = array_create();
+    parent = -1;
 }
 
 function Add_Action(_actions,_function){
@@ -438,32 +584,146 @@ function Add_Action(_actions,_function){
     array_push(_actions.type,"FUNC");
 }
 
-function Add_Send(_actions, _event,_state){
+function Add_Send(_statemachine, _actions, _event,_state){
     array_push(
         _actions.contents,
-        function(){Send_Event(_event,state);}
+        function(){_statemachine.Send_Event(_event,state);}
     );
     array_push(_actions.type,"SEND");
 }
 
-function Send_Event(_event, _state){//not public for developers
+
+
+function after(_state, _n, _unit = "tick"){
+    if(_state.type!="state"){show_error("Err: input is not a state.",true);}
     if(_state.isActive == false){return false;}
-    
-    Exec_Active_State(_state, _event);
-    
-    var _earlyReturn = !(_state.isActive);
-    return _earlyReturn;
+    var _t = _state.tick;
+    switch(_unit){
+        default:
+        case "tick":
+            if(_n < _t){
+                return true;
+            }
+            else{
+                return false;
+            }
+        case "sec":
+            if(_n * game_get_speed(gamespeed_fps) < _t){
+                return true;
+            }
+            else{
+                return false;
+            }
+    }
 }
 
+function Add_Child(_parent, _child){
+    if((_parent.type == "statemachine")||(_parent.type == "state")){
+        if(_child.type == "state"){
+            array_push(_parent.states,_child);
+            _child.parent = _parent;
+        }
+        else if(_child.type == "junction"){
+            array_push(_parent.junctions,_child);
+            _child.parent = _parent;
+        }
+        else{
+            show_error("Err: Illegal child type.",true);
+        }
+    }
+    else{
+        show_error("Err: Illegal parent type.",true);
+    }
+}
+
+function Link_Transition(_src, _trans, _dest, _isDefault = false){
+    if(_isDefault){
+        var _t = _src.type;
+        if((_t!="state")&&(_t!="statemachine")){show_error("Err: Link, _src is not a state/statemachine",true);}
+        if(_dest.type!="state"){show_error("Err: Link, _dest is not a state",true);}
+        _trans.src = _src;
+        _trans.dest = _dest;
+        array_push(_src.transesDefault,_trans);
+    }
+    else{
+        if((_src == _dest)
+        ||(Check_Ischild(_src, _dest))){//inner transition
+            _trans.src = _src;
+            _trans.dest = _dest;
+            array_push(_src.transesInner,_trans);
+        }
+        else{//outer transition
+            _trans.src = _src;
+            _trans.dest = _dest;
+            array_push(_src.transesOuter,_trans);
+        }
+    }
+}
+
+function Check_Ischild(_parent, _child){
+    if(_parent == _child){return 1;}
+    if(_parent.type == "state"){
+        if(_child.type == "state"){
+            //collect all children
+            var _childrenState = Get_State_Children(_parent);
+            
+        }
+        else if(_child.type == "junction"){
+            var _childrenJunc = Get_Junction_Children(_parent);
+        }
+        else{
+            show_error("Err: Illegal _child.",true);
+        }
+    }
+    else{
+        show_error("Err: Illegal _parent.",true);
+    }
+}
+
+function Get_State_Children(_parent){
+    if((_parent.type == "statemachine") || (_parent.type == "state")){
+        var _children = array_create();
+        var _p = _parent;
+        _children = array_union(_children,_p.states);
+        var _lenChildren = array_length(_children);
+        var _i = 0;
+
+        while(_i<_lenChildren){
+            _p = _children[_i];
+            if(0<array_length(_p.states)){
+                _children = array_union(_children, _p.states);
+                _lenChildren = array_length(_children);
+                _i ++;
+            }
+        }
+        
+        return _children;
+    }
+    else{
+        show_error("Err: Illegal _parent type.", true);
+    }
+}
+
+function Get_Junction_Children(_parent){
+    if((_parent.type == "statemachine") || (_parent.type == "state")){
+        var _childrenState = Get_State_Children(_parent);
+        var _len = array_length(_childrenState);
+        var _childrenJunc = array_create();
+        
+        for(var _i = 0; _i<_len; _i++){
+            var _junc = array_create();
+            _junc = _childrenState[_i].junctions;
+            if(0<array_length(_junc)){
+                _childrenJunc = array_union(_childrenJunc, _junc);
+            }
+        }
+        
+        return _childrenJunc;
+    }
+    else{
+        show_error("Err: Illegal _parent type.", true);
+    }
+}
 
 #endregion  ////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
 

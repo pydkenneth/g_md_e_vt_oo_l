@@ -2,6 +2,34 @@
   "resourceType": "GMProject",
   "resourceVersion": "1.6",
   "name": "dev_tools",
+  "AudioGroups": [
+    {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
+  ],
+  "configs": {
+    "children": [],
+    "name": "Default",
+  },
+  "defaultScriptType": 1,
+  "Folders": [
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"debug_tools","folderPath":"folders/debug_tools.yy","order":2,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"debug_parents","folderPath":"folders/debug_tools/debug_parents.yy","order":1,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"debug_sprites","folderPath":"folders/debug_tools/debug_sprites.yy","order":2,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"dev_tools","folderPath":"folders/dev_tools.yy","order":3,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_notice","folderPath":"folders/dev_tools/group_notice.yy","order":1,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_placard","folderPath":"folders/dev_tools/group_placard.yy","order":2,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_statemachine","folderPath":"folders/dev_tools/group_statemachine.yy","order":0,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"particle_tools","folderPath":"folders/particle_tools.yy","order":4,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Rooms","folderPath":"folders/Rooms.yy","order":0,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_rm_particle","folderPath":"folders/Rooms/group_rm_particle.yy","order":5,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_rm_statemachine","folderPath":"folders/Rooms/group_rm_statemachine.yy","order":7,},
+  ],
+  "IncludedFiles": [
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"paragraphs_dev.csv","CopyToMask":-1,"filePath":"datafiles",},
+  ],
+  "isEcma": false,
+  "MetaData": {
+    "IDEVersion": "2023.1.1.62",
+  },
   "resources": [
     {"id":{"name":"button_send_particle_moving","path":"objects/button_send_particle_moving/button_send_particle_moving.yy",},"order":2,},
     {"id":{"name":"scr_test_load_csv","path":"scripts/scr_test_load_csv/scr_test_load_csv.yy",},"order":11,},
@@ -94,51 +122,12 @@
     {"id":{"name":"spr_debug_circle_48x48","path":"sprites/spr_debug_circle_48x48/spr_debug_circle_48x48.yy",},"order":9,},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},"order":1,},
   ],
-  "Options": [
-    {"name":"Amazon Fire","path":"options/amazonfire/options_amazonfire.yy",},
-    {"name":"Android","path":"options/android/options_android.yy",},
-    {"name":"iOS","path":"options/ios/options_ios.yy",},
-    {"name":"Linux","path":"options/linux/options_linux.yy",},
-    {"name":"macOS","path":"options/mac/options_mac.yy",},
-    {"name":"tvOS","path":"options/tvos/options_tvos.yy",},
-    {"name":"Windows","path":"options/windows/options_windows.yy",},
-    {"name":"operagx","path":"options/operagx/options_operagx.yy",},
-    {"name":"Main","path":"options/main/options_main.yy",},
-  ],
-  "defaultScriptType": 1,
-  "isEcma": false,
-  "configs": {
-    "name": "Default",
-    "children": [],
-  },
   "RoomOrderNodes": [
     {"roomId":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"roomId":{"name":"rm_particle","path":"rooms/rm_particle/rm_particle.yy",},},
     {"roomId":{"name":"rm_statemachine","path":"rooms/rm_statemachine/rm_statemachine.yy",},},
   ],
-  "Folders": [
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"debug_tools","folderPath":"folders/debug_tools.yy","order":2,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"debug_parents","folderPath":"folders/debug_tools/debug_parents.yy","order":1,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"debug_sprites","folderPath":"folders/debug_tools/debug_sprites.yy","order":2,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"dev_tools","folderPath":"folders/dev_tools.yy","order":3,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_notice","folderPath":"folders/dev_tools/group_notice.yy","order":1,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_placard","folderPath":"folders/dev_tools/group_placard.yy","order":2,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_statemachine","folderPath":"folders/dev_tools/group_statemachine.yy","order":0,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"particle_tools","folderPath":"folders/particle_tools.yy","order":4,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Rooms","folderPath":"folders/Rooms.yy","order":0,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_rm_particle","folderPath":"folders/Rooms/group_rm_particle.yy","order":5,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_rm_statemachine","folderPath":"folders/Rooms/group_rm_statemachine.yy","order":7,},
-  ],
-  "AudioGroups": [
-    {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
-  ],
   "TextureGroups": [
-    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"Default","isScaled":true,"compressFormat":"bz2","loadType":"default","directory":"","autocrop":true,"border":2,"mipsToGenerate":0,"groupParent":null,"targets":-1,},
+    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"targets":-1,},
   ],
-  "IncludedFiles": [
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"paragraphs_dev.csv","CopyToMask":-1,"filePath":"datafiles",},
-  ],
-  "MetaData": {
-    "IDEVersion": "2022.11.1.56",
-  },
 }
