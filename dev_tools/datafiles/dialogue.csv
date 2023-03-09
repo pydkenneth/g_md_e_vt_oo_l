@@ -1,0 +1,5 @@
+﻿ID,Tachie_1,Setting,Tachie_2,Setting,Tachie_3,Setting,Tachie_4,Setting,Tachie_5,Setting,Tachie_6,Setting,Tachie_7,Setting,Tachie_8,Setting,Tachie_9,Setting,CG,VFX,SFX,Speaker,dialogue_content,show by alphabets
+1,spr_char01,0 ry,,,,,,,,,,,,,,,,,spr_cg_village_dialogue,,NON,冷靜的男子,在這種時候你也有辦法遲到啊，隊長大人。,default
+2,,,spr_char01,,,,,,,,,,,,,,,,,,NON,充滿朝氣的男子,呼、呼...光想到這是最後的決戰，雙手就抖地連裝備都穿不好...,default
+3,,,,,,,,,,,spr_char02,1 ly_shock,,,,,,,,,,,,
+,,,,,,,,,,,,1 L/R seq_name,,,,,,,,,,,,

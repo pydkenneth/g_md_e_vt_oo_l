@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "Script11",
+  "name": "scr_dialogue_dev",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Rooms",
-    "path": "folders/Rooms.yy",
+    "name": "group_dialogue",
+    "path": "folders/dev_tools/group_dialogue.yy",
   },
 }

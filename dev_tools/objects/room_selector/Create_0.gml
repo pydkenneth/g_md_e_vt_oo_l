@@ -11,7 +11,8 @@ namesChoice = array_create();roomsChoice = array_create();//DO NOT EDIT
 
 Add_Room(Room1,"Room1");
 Add_Room(rm_particle, "rm_particle");
-Add_Room(rm_statemachine, "statemachine");
+Add_Room(rm_dialogue, "rm_dialogue");
+//Add_Room(rm_statemachine, "statemachine");
 choiceCurrent = 0;
 
 prv = {
@@ -37,7 +38,7 @@ TriggerAction = function(){
     return;
 }
 
-//DO NOT EDIT : private funcitons
+#region DO NOT EDIT : private funcitons
 function Draw_LeftButton(_c_Button){
     draw_roundrect_color(x,y,x+prv.widthButton, y+prv.height, _c_Button, _c_Button, false);   //left button
     draw_triangle_color(x,y+prv.height*0.5, x+prv.widthButton-5, y, x+prv.widthButton-5, y+prv.height, c_white, c_white, c_white, false);
@@ -73,3 +74,4 @@ function Check_MousePressedButton(){
         return prv.buttonNone;   //no button is pressed
     }
 }
+#endregion

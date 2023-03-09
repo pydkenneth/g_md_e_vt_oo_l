@@ -10,6 +10,8 @@ function Draw_Reset(){
 
 ///desc compute phase value according to input values
 function GetPhaseValue_EqualPropotion(_valueStart, _period, _valueZeroPhase, _proportionEqual, _phaseTarget){
+    //TODO: need confirm whether this function is ready or not.
+    
     //determine target value while _valueStart == 0
     var _targetValue_0 = (_period / _proportionEqual) * _phaseTarget;
     
@@ -32,7 +34,7 @@ function GetPhaseValue_EqualPropotion(_valueStart, _period, _valueZeroPhase, _pr
 //example: brief judge at start line of a function
 //#macro CHECK_DEBUG_MODE if(global.debug_mode==false){return;}
 
-function Draw_Cross(_x,_y,_len,_w,_col1,_col2){
+function Draw_Cross(_x,_y,_len=10,_w=2,_col1=c_yellow ,_col2=c_green){
     draw_line_width_color(_x,_y,_x,_y-_len,_w,_col1,_col2);
     draw_line_width_color(_x,_y,_x-_len,_y,_w,_col1,_col2);
     draw_line_width_color(_x,_y,_x,_y+_len,_w,_col1,_col2);
@@ -59,7 +61,7 @@ function Animcurve_Get_Value(_idCurv, _nameChannel, _val){
     return _result;
 }
 
-function Draw_ArrowHead(_x = 0, _y = 0, _direction = 0, _width = 24, _length = 24, _color = c_white, _outline = false){
+function Draw_ArrowHead(_x, _y, _direction, _width = 24, _length = 24, _color = c_white, _outline = false){
     var _x1,_y1,_x2,_y2,_x3,_y3;
     _x1 = _x + lengthdir_x(_width/2, 90+_direction)
     _y1 = _y + lengthdir_y(_width/2, 90+_direction)
@@ -88,7 +90,7 @@ function Draw_Rectangle_Center(_x,_y,_width,_height, _color = c_white, _outlined
     Draw_Reset();
 }
 
-function Draw_Rectangle_Spr(_x,_y,_width,_height,_color, _centered = false){
+function Draw_Rectangle_Spr(_x,_y,_width,_height,_color = c_white, _centered = false){
     draw_set_color(_color);
     draw_sprite_stretched(spr_point, 0, _x-(_centered?_width/2:0), _y-(_centered?_width/2:0), _width, _height);
     Draw_Reset();
@@ -136,4 +138,118 @@ function Array_Find_Index_Ele(_array, _ele){
         }
     }
     return -1;
+}
+
+function Reset_Draw_Text(){
+    draw_set_valign(fa_top);
+    draw_set_halign(fa_left);
+    draw_set_font(-1);//TODO: need confirm
+}
+
+function Change_Seq_Obj_Sprite(_elementSeq, _spriteIndex, _track = 0){
+    var seqStruct = layer_sequence_get_instance(_elementSeq);
+    var _type = seqStruct.sequence.tracks[_track].type;
+    if(_type == seqtracktype_instance){
+        var _inst = seqStruct.activeTracks[_track].instanceID;
+        _inst.sprite_index = _spriteIndex;
+    }
+    else{
+        show_error("Err: track type is not an instance track.", true);
+    }
+}
+
+function Mirror_Seq(_elementSeq){
+    #region NOTICE:
+    /* The target sequence must have scalex, posx, rotation tracks.
+    Place this function at draw event of handler object which control sequence element.
+    Watch out time sequence order between handler object and target sequence,
+    there might be some time sequence order issue for instance tracks.
+    */
+    #endregion
+    var _x = layer_sequence_get_x(_elementSeq);
+    var seqStruct = layer_sequence_get_instance(_elementSeq);
+    var _activeTracks = seqStruct.activeTracks;
+    var _trackCount = array_length(_activeTracks);
+    var _inst, _type;
+    
+    if(!seqStruct.finished){
+        for(var _i=0; _i<_trackCount; _i++){
+            _type = seqStruct.sequence.tracks[_i].type;
+            if(_type == seqtracktype_graphic){
+                _activeTracks[_i].scalex *= -1;
+                _activeTracks[_i].posx *= -1;
+                _activeTracks[_i].rotation *= -1;
+            }
+            else if(_type == seqtracktype_instance){
+                _inst = _activeTracks[_i].instanceID;
+                _inst.x = _x - seqStruct.activeTracks[_i].posx;
+                _inst.image_xscale = -seqStruct.activeTracks[_i].scalex;
+                _inst.image_angle = -seqStruct.activeTracks[_i].rotation;
+            }
+        }
+    }
+    else{
+        if(!seqStruct.paused){
+            #region Explaination
+            /* Because When seq is finished, GM will not update active track anymore,
+            we don't need to inverse scalex, pos, rotation by every frame after seq element is finished.
+            Another fact is that "finished" is NOT equal to "paused",
+            so "paused" can be used as a flag to indicate whether active tracks had been mirrored at the final position,
+            and no need to create a "mirrored flag" for every finished seq element. */
+            #endregion
+            layer_sequence_pause(_elementSeq);
+            for(var _i=0; _i<_trackCount; _i++){
+                _type = seqStruct.sequence.tracks[_i].type;
+                if(_type == seqtracktype_graphic){
+                    _activeTracks[_i].scalex *= -1;
+                    _activeTracks[_i].posx *= -1;
+                    _activeTracks[_i].rotation *= -1;
+                }
+                else if(_type == seqtracktype_instance){
+                    _inst = _activeTracks[_i].instanceID;
+                    _inst.x = _x - seqStruct.activeTracks[_i].posx;
+                    _inst.image_xscale = -seqStruct.activeTracks[_i].scalex;
+                    _inst.image_angle = -seqStruct.activeTracks[_i].rotation;
+                }
+            }
+        }
+    }
+}
+
+function Clear_Layer_Element(_idLayer){
+    if(!layer_exists(_idLayer)){show_error("Err:layer doesn't exist.",true);}
+    
+    var _eles = layer_get_all_elements(_idLayer);
+    var _len = array_length(_eles);
+    var _type, _ele, _inst;
+    for(var _i=_len-1; 0<=_i; _i--){
+        _type = layer_get_element_type(_eles[_i]);
+        switch(_type){
+        case layerelementtype_background:
+            _ele = array_pop(_eles[_i]);
+            layer_background_destroy(_ele);
+            break;
+        case layerelementtype_instance:
+            _ele = array_pop(_eles[_i]);
+            layer_instance_get_instance(_ele);
+            instance_destroy(_inst);
+            break;
+        case layerelementtype_sprite:
+            _ele = array_pop(_eles[_i]);
+            layer_sprite_destroy(_ele);
+            break;
+        case layerelementtype_tilemap:
+            _ele = array_pop(_eles[_i]);
+            layer_tilemap_destroy(_ele);
+            break;
+        //case layerelementtype_particlesystem:
+        //note: this type's infomation is too little, need more info for application
+        case layerelementtype_sequence:
+            _ele = array_pop(_eles[_i]);
+            layer_sequence_destroy(_ele);
+            break;
+        default:
+            show_error("Err:element type must be sprite or sequence.",false);
+        }
+    }
 }

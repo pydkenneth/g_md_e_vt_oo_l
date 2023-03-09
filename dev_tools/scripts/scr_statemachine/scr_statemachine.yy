@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "group_statemachine",
-    "path": "folders/dev_tools/group_statemachine.yy",
+    "name": "group_statemachine_NOT_FIN",
+    "path": "folders/dev_tools/group_statemachine_NOT_FIN.yy",
   },
 }
