@@ -23,7 +23,7 @@
     {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"fc106620-79d0-4a6e-9ead-46dc6fbdbf6b","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
-  "origin": 4,
+  "origin": 1,
   "parent": {
     "name": "group_sprs_seqs_dialogue_dev",
     "path": "folders/dev_tools/group_dialogue/group_sprs_seqs_dialogue_dev.yy",
@@ -60,7 +60,7 @@
     "visibleRange": null,
     "volume": 1.0,
     "xorigin": 600,
-    "yorigin": 100,
+    "yorigin": 0,
   },
   "swatchColours": null,
   "swfPrecision": 2.525,

@@ -2,6 +2,7 @@
 
 #region settings for layers & depth
 depthDialogue = -3000;
+depth = depthDialogue;
 depthCg = depthDialogue;
 depthFrameBottom  = depthDialogue-5;
 depthLayer9Tachi = depthDialogue-10;
@@ -14,15 +15,20 @@ depthLayer3Tachi = depthDialogue-70;
 depthLayer2Tachi = depthDialogue-80;
 depthLayer1Tachi = depthDialogue-90;
 depthLayer0Tachi = depthDialogue-100;
+
 depthTextBox = depthDialogue-110;
 depthCharNameBox = depthDialogue-111;
 depthText = depthDialogue-112;
+
 depthFrameTop = depthDialogue-115;
 depthButtons = depthDialogue-120;
 depthDebug = depthDialogue-121;
 
 layerCg = layer_create(depthDialogue);
-
+layerTextBoxDialogue = layer_create(depthTextBox);
+layerCharNameBoxDialogue = layer_create(depthCharNameBox);
+layerText = layer_create(depthText);
+layerButtons = layer_create(depthButtons);
 #endregion
 
 #region dynamic datas, DO NOT EDIT
@@ -56,8 +62,15 @@ Play = function(_idDialogue){//public
     //Play_VFX(dialogueCurrent.vfx);
     //Play_SFX(dialogueCurrent.sfx);
     Set_Printer();
+    
     //stage.Set_Stage(id,dialogueCurrent.tachis,dialogueCurrent.settings);
     //cmd.Do(dialogueCurrent.cmd);
+}
+
+Play_Next = function(){
+    var _idDialogue = real(dialogueCurrent.id);
+    _idDialogue++;
+    Play(_idDialogue);
 }
 
 Get_Dialogue = function(_idDialogue){//private
@@ -129,16 +142,21 @@ Set_Printer = function(){
     printer.speaker = dialogueCurrent.speaker;
     printer.Set_Sentence(dialogueCurrent.dialogueContent) ;
     printer.showByAlphabet = dialogueCurrent.showByAlphabet;
+    printer.Play_Typewriting();
+    if(!printer.isOpened){printer.Open();}
 }
 
 
 #region initialization
-buttonSkip = instance_create_layer(1140,600,layer,button_skip_dialogue_dev);
-buttonSkip.ActionReleased = Check_Csv;
+buttonSkip = instance_create_layer(1140,600,layerButtons,button_skip_dialogue_dev);
+buttonSkip.ActionReleased = Play_Next;
+
 
 instance_create_depth(x,y,depth,stage_dialogue_dev);
 
-printer = new printer_dialogue(x,y);
+printer = instance_create_layer(x,y,layerText,printer_dialogue_dev);
+printer.layerTextBoxDialogue = layerTextBoxDialogue;
+printer.layerCharNameBoxDialogue = layerCharNameBoxDialogue;
 
 Set_Dialogue();
 Play(1);

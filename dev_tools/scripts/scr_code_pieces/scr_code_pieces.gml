@@ -143,7 +143,7 @@ function Array_Find_Index_Ele(_array, _ele){
 function Reset_Draw_Text(){
     draw_set_valign(fa_top);
     draw_set_halign(fa_left);
-    draw_set_font(-1);//TODO: need confirm
+    //draw_set_font(-1);//TODO: need confirm
 }
 
 function Change_Seq_Obj_Sprite(_elementSeq, _spriteIndex, _track = 0){
@@ -226,26 +226,26 @@ function Clear_Layer_Element(_idLayer){
         _type = layer_get_element_type(_eles[_i]);
         switch(_type){
         case layerelementtype_background:
-            _ele = array_pop(_eles[_i]);
+            _ele = array_pop(_eles);
             layer_background_destroy(_ele);
             break;
         case layerelementtype_instance:
-            _ele = array_pop(_eles[_i]);
+            _ele = array_pop(_eles);
             layer_instance_get_instance(_ele);
             instance_destroy(_inst);
             break;
         case layerelementtype_sprite:
-            _ele = array_pop(_eles[_i]);
+            _ele = array_pop(_eles);
             layer_sprite_destroy(_ele);
             break;
         case layerelementtype_tilemap:
-            _ele = array_pop(_eles[_i]);
+            _ele = array_pop(_eles);
             layer_tilemap_destroy(_ele);
             break;
         //case layerelementtype_particlesystem:
         //note: this type's infomation is too little, need more info for application
         case layerelementtype_sequence:
-            _ele = array_pop(_eles[_i]);
+            _ele = array_pop(_eles);
             layer_sequence_destroy(_ele);
             break;
         default:

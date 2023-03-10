@@ -19,4 +19,6 @@ case "Pressing":
     break;
 }
 
-if(prv.state!="Pressing"){alarm_set(0,-1);}
+if(prv.state!="Pressing"){
+    alarm_set(0,-1);
+}
