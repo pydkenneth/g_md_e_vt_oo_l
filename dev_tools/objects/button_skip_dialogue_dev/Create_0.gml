@@ -20,9 +20,7 @@ function Check_Button_Released(){
 }
 
 function Check_Button_Pressing(){
-    if(mouse_check_button(mb_left)
-    &&(x <= mouse_x) && ( mouse_x <= x + width)
-    &&(y <= mouse_y) && ( mouse_y <= y + height)){
+    if(mouse_check_button(mb_left)){
         prv.isPressed = true;
         return true;
     }

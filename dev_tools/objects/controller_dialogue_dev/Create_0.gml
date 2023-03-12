@@ -56,6 +56,7 @@ Check_Csv = function(){
 }
 
 Play = function(_idDialogue){//public
+    if(!is_numeric(_idDialogue)){show_error("Err: Invalid idDialogue",true);}
     dialogueCurrent = Get_Dialogue(_idDialogue);
     Set_Cg(dialogueCurrent.cg);
     //Set_Frame(sprFrame);
@@ -68,6 +69,7 @@ Play = function(_idDialogue){//public
 }
 
 Play_Next = function(){
+    if(dialogueCurrent.id == undefined){show_error("Err: Invalid idDialogue",true);}
     var _idDialogue = real(dialogueCurrent.id);
     _idDialogue++;
     Play(_idDialogue);
@@ -158,7 +160,7 @@ printer = instance_create_layer(x,y,layerText,printer_dialogue_dev);
 printer.layerTextBoxDialogue = layerTextBoxDialogue;
 printer.layerCharNameBoxDialogue = layerCharNameBoxDialogue;
 
-Set_Dialogue();
+Set_Dialogue("dialogue_1.csv");
 Play(1);
 
 

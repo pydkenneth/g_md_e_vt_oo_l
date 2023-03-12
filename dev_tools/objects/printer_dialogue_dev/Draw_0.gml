@@ -1,8 +1,6 @@
 /// @desc 
 Draw_Cross(x,y);
 //draw_text(x,y,"I'm here.");
-draw_text(xSentence, ySentence, bufferSentence);
-
 //Draw_Text_Buffer();
 switch(stateText){
     default:

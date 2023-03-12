@@ -143,7 +143,7 @@ function Array_Find_Index_Ele(_array, _ele){
 function Reset_Draw_Text(){
     draw_set_valign(fa_top);
     draw_set_halign(fa_left);
-    //draw_set_font(-1);//TODO: need confirm
+    draw_set_font(-1);//TODO: need confirm
 }
 
 function Change_Seq_Obj_Sprite(_elementSeq, _spriteIndex, _track = 0){

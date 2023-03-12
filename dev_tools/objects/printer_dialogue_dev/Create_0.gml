@@ -15,13 +15,14 @@ yTextBox = view_get_hport(0)*2/3;
 sprTextBox = spr_text_box_dialogue;
 layerTextBoxDialogue = 0;
 xSentence = xTextBox - (sprite_get_width(sprTextBox)/2) + 20;
-ySentence = yTextBox + 50;
+ySentence = yTextBox + 30;
     
 xCharNameBox = 20;
 yCharNameBox = view_get_hport(0)*2/3-30;
-xSpeaker = xCharNameBox;
-ySpeaker = yCharNameBox;
 sprCharNameBox = spr_char_name_box_dialogue;
+
+xSpeaker = 155;//xCharNameBox+20;
+ySpeaker = 477;//yCharNameBox+15;
 layerCharNameBoxDialogue = 0;
 isOpened = false;
 #endregion
@@ -90,6 +91,7 @@ Check_Finished_Typewriting = function(){//public
 Draw_Text_Buffer = function(){//private
     draw_set_valign(valign);
     draw_set_halign(halign);
+    draw_set_font(Noto);
     draw_text(xSentence, ySentence, bufferSentence);
     Reset_Draw_Text();
     return;
@@ -114,7 +116,11 @@ Update_Text_Buffer = function(){//private
 }
 
 Draw_Speaker = function(){//private
+    draw_set_valign(fa_middle);
+    draw_set_halign(fa_center);
+    draw_set_font(Noto);
     draw_text(xSpeaker, ySpeaker, speaker);
+    Reset_Draw_Text();
 }
 
 Play_Snd_Writing = function(){//private

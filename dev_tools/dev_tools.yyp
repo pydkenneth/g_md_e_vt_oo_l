@@ -27,6 +27,8 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group_rm_statemachine","folderPath":"folders/Rooms/group_rm_statemachine.yy",},
   ],
   "IncludedFiles": [
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"dialogue_1.csv","CopyToMask":-1,"filePath":"datafiles",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"dialogue_1.csv_RemoveRepeatWord.txt","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"dialogue.csv","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"paragraphs_dev.csv","CopyToMask":-1,"filePath":"datafiles",},
   ],
@@ -112,7 +114,7 @@
     {"id":{"name":"fnt_default","path":"fonts/fnt_default/fnt_default.yy",},},
     {"id":{"name":"SpriteFont_SourceCodeVariable_Semibold__48___0_0_0_0__31x53_gg","path":"sprites/SpriteFont_SourceCodeVariable_Semibold__48___0_0_0_0__31x53_gg/SpriteFont_SourceCodeVariable_Semibold__48___0_0_0_0__31x53_gg.yy",},},
     {"id":{"name":"scr_signal_slot_dev","path":"scripts/scr_signal_slot_dev/scr_signal_slot_dev.yy",},},
-    {"id":{"name":"Font3","path":"fonts/Font3/Font3.yy",},},
+    {"id":{"name":"Noto","path":"fonts/Noto/Noto.yy",},},
     {"id":{"name":"printer_dialogue_dev","path":"objects/printer_dialogue_dev/printer_dialogue_dev.yy",},},
     {"id":{"name":"notice_trans","path":"objects/notice_trans/notice_trans.yy",},},
     {"id":{"name":"button_send_particle_jumping","path":"objects/button_send_particle_jumping/button_send_particle_jumping.yy",},},
