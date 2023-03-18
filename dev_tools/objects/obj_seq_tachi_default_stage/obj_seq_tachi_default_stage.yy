@@ -1,16 +1,13 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "stage_dialogue_dev",
-  "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,},
-  ],
+  "name": "obj_seq_tachi_default_stage",
+  "eventList": [],
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "group_dialogue",
-    "path": "folders/dev_tools/group_dialogue.yy",
+    "name": "group_sprs_seqs_dialogue_dev",
+    "path": "folders/dev_tools/group_dialogue/group_sprs_seqs_dialogue_dev.yy",
   },
   "parentObjectId": null,
   "persistent": false,
@@ -28,7 +25,10 @@
   "physicsStartAwake": true,
   "properties": [],
   "solid": false,
-  "spriteId": null,
+  "spriteId": {
+    "name": "spr_char01",
+    "path": "sprites/spr_char01/spr_char01.yy",
+  },
   "spriteMaskId": null,
   "visible": true,
 }

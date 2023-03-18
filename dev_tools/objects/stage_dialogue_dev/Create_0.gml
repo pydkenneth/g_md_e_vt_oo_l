@@ -8,8 +8,19 @@ elementsPos = array_create(10);
 #endregion
 
 #region settings
+var _wV = view_get_hport(view_current)/10;
 XS_TACHI = array_create(10);
-Y_TACHI = 1280;
+XS_TACHI[0] = _wV * 0;
+XS_TACHI[1] = _wV * 1;
+XS_TACHI[2] = _wV * 2;
+XS_TACHI[3] = _wV * 3;
+XS_TACHI[4] = _wV * 4;
+XS_TACHI[5] = _wV * 5;
+XS_TACHI[6] = _wV * 6;
+XS_TACHI[7] = _wV * 7;
+XS_TACHI[8] = _wV * 8;
+XS_TACHI[9] = _wV * 9;
+Y_TACHI = 800;
 ORDER_DRAW = [0,3,7,2,8,1,9,4,6,5];
 IDS_LAYER = array_create(10);//assigned by controller
 
@@ -20,9 +31,10 @@ IDS_LAYER = array_create(10);//assigned by controller
 
 #region public methods
 function Clear_Stage(){
-    sprsPos = -1;
-    settingsPos = -1;
+    sprsPos = array_create(10);
+    settingsPos = array_create(10);
     Clear_Mannequins();
+    elementsPos = array_create(10);
 }
 
 function Set_Layers(_idsLayer){
@@ -42,7 +54,7 @@ function Set_Stage(_id, _tachis, _settings){
 #endregion
 
 #region private attributes
-mannequins = array_create(10,array_create(2));
+
 #endregion
 
 #region private methods
@@ -65,16 +77,36 @@ function settingPos(_idSentence, _iTachi, _ss=["","",""]) constructor{
     case 0:
         return;
     case 3:
-        //seq
-        var _a = asset_get_index(_ss[2]);
-        if((_a == -1)||(asset_sequence != asset_get_type(_a))){
-            show_error("Err: invalid seq, " + "sentence id: " + string(_idSentence) + ", tachi: " + string(_iTachi), true);
-        }
+        //deal with seq
+        if(_ss[2] == ""){}
         else{
-            seq = _a;
+            var _a = asset_get_index(_ss[2]);
+            if((_a == -1)||(asset_sequence != asset_get_type(_a))){
+                show_error("Err: invalid seq, " + "sentence id: " + string(_idSentence) + ", tachi: " + string(_iTachi), true);
+            }
+            else{
+                seq = _a;
+            }
         }
     case 2:
-        //needMirror
+        //deal with needMirror
+        if(_ss[1] == ""){}
+        else{
+            switch(_ss[1]){
+            case "":
+            case "N":
+            case "n":
+                needMirror = false;
+                break;
+            case "M":
+            case "m":
+                needMirror = true;
+                break;
+            default:
+                show_error("Err: illegal setting for needMirror, " + "sentence id: " + string(_idSentence) + ", Tachi: " + string(_iTachi),true);
+            }
+        }
+        /*
         var _m = bool(real(_ss[1]));
         if(is_bool(_m)){
             needMirror = _m;
@@ -82,8 +114,9 @@ function settingPos(_idSentence, _iTachi, _ss=["","",""]) constructor{
         else{
             show_error("Err: illegal setting for needMirror, " + "sentence id: " + string(_idSentence) + ", Tachi: " + string(_iTachi),true);
         }
+        */
     case 1:
-        //layer
+        //deal with layer
         var _layer = floor(real(_ss[0]));
         if((1<= _layer)&& (_layer <=9)){
             orderLayer = _layer;
@@ -105,7 +138,7 @@ function Check_Layers_Stage_Exist(){
 
 function Tachi_To_Pos(){
     var _ss = array_create();
-    var _a, _setting;
+    var _a;
     for (var _i = 1; _i<=9; _i++){
         if(0 == string_length(sprsTachi[_i])){
             //sprsPos = -1;
@@ -129,7 +162,20 @@ function Tachi_To_Pos(){
 }
 
 function Set_Mannequins(){
-    
+    var _spr, _setting, _seq;
+    for(var _i = 1; _i<=9; _i++){
+        _spr = sprsPos[_i];
+        if(_spr == -1){continue;}
+        if(!sprite_exists(_spr)){show_error("Err: invalid spr",true);}
+        
+        _setting = settingsPos[_i];
+        if(!is_struct(_setting)){continue;}
+        _seq = _setting.seq;
+        if(_seq == -1){continue;}
+        if(!sequence_exists(_seq)){continue;}
+        elementsPos[_i] = layer_sequence_create(IDS_LAYER[_setting.orderLayer], XS_TACHI[_i], Y_TACHI, _seq);
+        Change_Seq_Obj_Sprite(elementsPos[_i], _spr);
+    }
 }
 #endregion
 
