@@ -29,11 +29,25 @@ layerTextBoxDialogue = layer_create(depthTextBox);
 layerCharNameBoxDialogue = layer_create(depthCharNameBox);
 layerText = layer_create(depthText);
 layerButtons = layer_create(depthButtons);
+
+layersTachi = array_create();
+layersTachi[9] = layer_create(depthLayer9Tachi);
+layersTachi[8] = layer_create(depthLayer8Tachi);
+layersTachi[7] = layer_create(depthLayer7Tachi);
+layersTachi[6] = layer_create(depthLayer6Tachi);
+layersTachi[5] = layer_create(depthLayer5Tachi);
+layersTachi[4] = layer_create(depthLayer4Tachi);
+layersTachi[3] = layer_create(depthLayer3Tachi);
+layersTachi[2] = layer_create(depthLayer2Tachi);
+layersTachi[1] = layer_create(depthLayer1Tachi);
+layersTachi[0] = layer_create(depthLayer0Tachi);
+
+
 #endregion
 
 #region dynamic datas, DO NOT EDIT
 elementCg = -1;//sprite element id
-
+dialogueCurrent = {};//current dialogue sentence & settings
 #endregion
 
 function Set_Dialogue(_filename = "dialogue.csv"){//public
@@ -64,7 +78,7 @@ Play = function(_idDialogue){//public
     //Play_SFX(dialogueCurrent.sfx);
     Set_Printer();
     
-    //stage.Set_Stage(id,dialogueCurrent.tachis,dialogueCurrent.settings);
+    stage.Set_Stage(dialogueCurrent.id,dialogueCurrent.tachis,dialogueCurrent.settings);
     //cmd.Do(dialogueCurrent.cmd);
 }
 
@@ -153,16 +167,15 @@ Set_Printer = function(){
 buttonSkip = instance_create_layer(1140,600,layerButtons,button_skip_dialogue_dev);
 buttonSkip.ActionReleased = Play_Next;
 
-
-instance_create_depth(x,y,depth,stage_dialogue_dev);
-
 printer = instance_create_layer(x,y,layerText,printer_dialogue_dev);
 printer.layerTextBoxDialogue = layerTextBoxDialogue;
 printer.layerCharNameBoxDialogue = layerCharNameBoxDialogue;
 
-Set_Dialogue("dialogue_1.csv");
-Play(1);
+stage = instance_create_depth(x, y, depthLayer9Tachi, stage_dialogue_dev);
+stage.Set_Layers(layersTachi);
 
+Set_Dialogue("dialogue.csv");
+Play(1);
 
 
 #endregion
