@@ -59,6 +59,7 @@ function Clear_Elements_Old(){
     var _type, _ele, _inst;
     for(var _i = _len-1;  0<=_i;  _i--){
         _ele = array_pop(elementsOld);
+        if(_ele == 0){continue;}
         _type = layer_get_element_type(_ele);
         switch(_type){
         case layerelementtype_sprite:
@@ -105,7 +106,8 @@ function settingPos(_idSentence, _iTachi, _ss=["","",""]) constructor{
         if(_ss[2] == ""){}
         else{
             var _a = asset_get_index(_ss[2]);
-            if((_a == -1)||(asset_sequence != asset_get_type(_a))){
+            var _type = asset_get_type(_ss[2]);
+            if((_a == -1)||(asset_sequence != _type)){
                 show_error("Err: invalid seq, " + "sentence id: " + string(_idSentence) + ", tachi: " + string(_iTachi), true);
             }
             else{
@@ -194,10 +196,11 @@ function Set_Mannequins(){
         
         _setting = settingsPos[_i];
         if(!is_struct(_setting)){continue;}
+        
         _seq = _setting.seq;
         if(_seq == -1){continue;}
         if(!sequence_exists(_seq)){continue;}
-        //elementsPos[_i] = layer_sequence_create(IDS_LAYER[_setting.orderLayer], XS_TACHI[_i], Y_TACHI, _seq);
+        
         elementsPos[_i] = Layer_Sequence_Tachi_Create(IDS_LAYER[_setting.orderLayer], XS_TACHI[_i], Y_TACHI, _seq, _spr, _setting.needMirror);
     }
 }

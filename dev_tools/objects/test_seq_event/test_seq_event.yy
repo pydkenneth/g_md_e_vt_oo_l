@@ -1,16 +1,15 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "ind_text_box_pointer_dialogue",
+  "name": "test_seq_event",
   "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,},
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
   ],
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "group_sprs_seqs_dialogue_dev",
-    "path": "folders/dev_tools/group_dialogue/group_sprs_seqs_dialogue_dev.yy",
+    "name": "group_dialogue",
+    "path": "folders/dev_tools/group_dialogue.yy",
   },
   "parentObjectId": null,
   "persistent": false,
@@ -28,10 +27,7 @@
   "physicsStartAwake": true,
   "properties": [],
   "solid": false,
-  "spriteId": {
-    "name": "spr_text_box_pointer_dialogue",
-    "path": "sprites/spr_text_box_pointer_dialogue/spr_text_box_pointer_dialogue.yy",
-  },
+  "spriteId": null,
   "spriteMaskId": null,
   "visible": true,
 }

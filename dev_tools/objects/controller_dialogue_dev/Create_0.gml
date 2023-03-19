@@ -93,7 +93,9 @@ Get_Dialogue = function(_idDialogue){//private
     var _w = ds_grid_width(dialogue);
     var _h = ds_grid_height(dialogue);
     var _y = ds_grid_value_y(dialogue, 0, 0,_w-1,_h-1,_idDialogue);
+    if(_y == -1){show_error("ERROR :\n invalid idDialogue.",true);};
     var _str = {};
+    
     //Check_Dialogue_Validation(_y);
     _str.id = dialogue[# 0, _y];
     _str.tachis = array_create();
@@ -122,7 +124,7 @@ Get_Dialogue = function(_idDialogue){//private
     _str.speaker = dialogue[# 22, _y];
     _str.dialogueContent = dialogue[# 23, _y];
     _str.showByAlphabet = dialogue[# 24, _y];
-    _str.cmd = dialogue[# 25, _y];
+    //_str.cmd = dialogue[# 25, _y];
     return _str;
 }
 

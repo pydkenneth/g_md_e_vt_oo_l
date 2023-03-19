@@ -15,7 +15,15 @@
     "Keyframes": [],
   },
   "eventStubScript": null,
-  "eventToFunction": {},
+  "eventToFunction": {
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": "",
+    "4": "",
+    "5": "",
+    "6": "",
+  },
   "length": 30.0,
   "lockOrigin": false,
   "moments": {
@@ -78,7 +86,10 @@
             ],},"modifiers":[],"trackColour":4282970768,"tracks":[],"traits":0,},
       ],"traits":0,},
   ],
-  "visibleRange": null,
+  "visibleRange": {
+    "x": 0.0,
+    "y": 29.9999,
+  },
   "volume": 1.0,
   "xorigin": 0,
   "yorigin": 0,

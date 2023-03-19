@@ -15,7 +15,7 @@ function Layer_Sequence_Tachi_Create(_layer, _x, _y, _sequenceId, _spr, _isMirro
     _d[0].event = method(_d[0], Event_0_Seq_Tachi);
     _k[0].channels = _d;
     _seqStruct.sequence.momentKeyframes = _k;
-
+    global.seqStruct = _seqStruct;
     return _ele;
 }
 
@@ -40,7 +40,9 @@ function Seq_Switch_Sprite(){
 
 function Mirror_Seq_All_Track(){
     //desc Let seq to mirror by self according to isMirrored.
-    if(!variable_struct_exists(self,"isMirrored")||!isMirrored){return;}
+    if(!variable_struct_exists(self,"isMirrored")||!isMirrored){
+        return;
+    }
 
     var _x = layer_sequence_get_x(elementID);
     var _activeTracks = self.activeTracks;
