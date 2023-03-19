@@ -1,5 +1,4 @@
 ﻿ID,Tachie_1,Setting,Tachie_2,Setting,Tachie_3,Setting,Tachie_4,Setting,Tachie_5,Setting,Tachie_6,Setting,Tachie_7,Setting,Tachie_8,Setting,Tachie_9,Setting,CG,VFX,SFX,Speaker,dialogue_content,show by alphabets
-1,spr_char01,2 M,,,,,,,,,,,,,,,,,spr_cg_village_dialogue,,NON,Cold Man,"Late at this situation, Captain Lord?",default
-2,,,spr_char01,,,,,,,,,,,,,,,,,,NON,Shiny Man,"O...Oh...the last fight as I thought, my hands shivered too heavily to wear equiptments...",default
-3,,,,,,,,,,,spr_char02,1 ly_shock,,,,,,,,,,,,
-,,,,,,,,,,,,1 L/R seq_name,,,,,,,,,,,,
+1,,,,,,,,,,,spr_char01,9 n,,,,,,,spr_cg_village_dialogue,,NON,Cold Man,"Late at this situation, Captain Lord?",default
+2,,,,,,,spr_char02,9 m,,,spr_char01,9 n,,,,,,,,,NON,Shiny Man,"O...Oh...the last fight as I thought, my hands shivered too heavily to wear equiptments...",default
+3,,,,,spr_char02,9 n,,,,,spr_char01,9 n,,,,,,,,,,,,

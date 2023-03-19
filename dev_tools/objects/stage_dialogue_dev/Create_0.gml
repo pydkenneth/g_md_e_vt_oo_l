@@ -5,10 +5,11 @@ sprsTachi = array_create(10);
 settingsTachi = array_create(10);
 settingsPos = array_create(10);
 elementsPos = array_create(10);
+
 #endregion
 
 #region settings
-var _wV = view_get_hport(view_current)/10;
+var _wV = view_get_wport(view_current)/10;
 XS_TACHI = array_create(10);
 XS_TACHI[0] = _wV * 0;
 XS_TACHI[1] = _wV * 1;
@@ -33,7 +34,7 @@ IDS_LAYER = array_create(10);//assigned by controller
 function Clear_Stage(){
     sprsPos = array_create(10);
     settingsPos = array_create(10);
-    Clear_Mannequins();
+    Get_Elements_Old();
     elementsPos = array_create(10);
 }
 
@@ -51,18 +52,41 @@ function Set_Stage(_id, _tachis, _settings){
     Set_Mannequins();
 }
 
+function Clear_Elements_Old(){
+    var _len = array_length(elementsOld);
+    if((_len == 0)||(elementsOld == -1)){return;}
+    
+    var _type, _ele, _inst;
+    for(var _i = _len-1;  0<=_i;  _i--){
+        _ele = array_pop(elementsOld);
+        _type = layer_get_element_type(_ele);
+        switch(_type){
+        case layerelementtype_sprite:
+            layer_sprite_destroy(_ele);
+            break;
+        case layerelementtype_sequence:
+            layer_sequence_destroy(_ele);
+            break;
+        case layerelementtype_instance:
+            _inst = layer_instance_get_instance(_ele);
+            instance_destroy(_inst);
+            break;
+        }
+    }
+    elementsOld = -1;
+}
+
 #endregion
 
 #region private attributes
-
+elementsOld = -1;
+justSetStage = false;
 #endregion
 
 #region private methods
-function Clear_Mannequins(){
-    var _len = array_length(IDS_LAYER);
-    for(var _iLayer=0; _iLayer < _len; _iLayer++){
-        Clear_Layer_Element(IDS_LAYER[_iLayer]);
-    }
+function Get_Elements_Old(){
+    elementsOld = elementsPos;
+    justSetStage = true;
 }
 
 function settingPos(_idSentence, _iTachi, _ss=["","",""]) constructor{
@@ -162,7 +186,7 @@ function Tachi_To_Pos(){
 }
 
 function Set_Mannequins(){
-    var _spr, _setting, _seq;
+    var _spr, _setting, _seq, _ele, _str;
     for(var _i = 1; _i<=9; _i++){
         _spr = sprsPos[_i];
         if(_spr == -1){continue;}
@@ -173,8 +197,8 @@ function Set_Mannequins(){
         _seq = _setting.seq;
         if(_seq == -1){continue;}
         if(!sequence_exists(_seq)){continue;}
-        elementsPos[_i] = layer_sequence_create(IDS_LAYER[_setting.orderLayer], XS_TACHI[_i], Y_TACHI, _seq);
-        Change_Seq_Obj_Sprite(elementsPos[_i], _spr);
+        //elementsPos[_i] = layer_sequence_create(IDS_LAYER[_setting.orderLayer], XS_TACHI[_i], Y_TACHI, _seq);
+        elementsPos[_i] = Layer_Sequence_Tachi_Create(IDS_LAYER[_setting.orderLayer], XS_TACHI[_i], Y_TACHI, _seq, _spr, _setting.needMirror);
     }
 }
 #endregion

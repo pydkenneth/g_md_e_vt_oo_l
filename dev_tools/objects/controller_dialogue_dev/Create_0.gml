@@ -94,6 +94,7 @@ Get_Dialogue = function(_idDialogue){//private
     var _h = ds_grid_height(dialogue);
     var _y = ds_grid_value_y(dialogue, 0, 0,_w-1,_h-1,_idDialogue);
     var _str = {};
+    //Check_Dialogue_Validation(_y);
     _str.id = dialogue[# 0, _y];
     _str.tachis = array_create();
     _str.settings = array_create();
@@ -123,6 +124,38 @@ Get_Dialogue = function(_idDialogue){//private
     _str.showByAlphabet = dialogue[# 24, _y];
     _str.cmd = dialogue[# 25, _y];
     return _str;
+}
+
+function Check_Dialogue_Validation(_y){
+    var _str;
+    _str.id = dialogue[# 0, _y];
+    _str.tachis = array_create();
+    _str.settings = array_create();
+    _str.tachis[1] = dialogue[# 1, _y];
+    _str.settings[1] = dialogue[# 2, _y];
+    _str.tachis[2] = dialogue[# 3, _y];
+    _str.settings[2] = dialogue[# 4, _y];
+    _str.tachis[3] = dialogue[# 5, _y];
+    _str.settings[3] = dialogue[# 6, _y];
+    _str.tachis[4] = dialogue[# 7, _y];
+    _str.settings[4] = dialogue[# 8, _y];
+    _str.tachis[5] = dialogue[# 9, _y];
+    _str.settings[5] = dialogue[# 10, _y];
+    _str.tachis[6] = dialogue[# 11, _y];
+    _str.settings[6] = dialogue[# 12, _y];
+    _str.tachis[7] = dialogue[# 13, _y];
+    _str.settings[7] = dialogue[# 14, _y];
+    _str.tachis[8] = dialogue[# 15, _y];
+    _str.settings[8] = dialogue[# 16, _y];
+    _str.tachis[9] = dialogue[# 17, _y];
+    _str.settings[9] = dialogue[# 18, _y];
+    _str.cg = dialogue[# 19, _y];
+    _str.vfx = dialogue[# 20, _y];
+    _str.sfx = dialogue[# 21, _y];
+    _str.speaker = dialogue[# 22, _y];
+    _str.dialogueContent = dialogue[# 23, _y];
+    _str.showByAlphabet = dialogue[# 24, _y];
+    _str.cmd = dialogue[# 25, _y];
 }
 
 Set_Cg = function(_nameSprite){//private

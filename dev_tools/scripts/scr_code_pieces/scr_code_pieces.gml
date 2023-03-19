@@ -146,81 +146,13 @@ function Reset_Draw_Text(){
     draw_set_font(-1);//TODO: need confirm
 }
 
-function Change_Seq_Obj_Sprite(_elementSeq, _spriteIndex, _track = 0){
-    var seqStruct = layer_sequence_get_instance(_elementSeq);
-    var _type = seqStruct.sequence.tracks[_track].type;
-    if(_type == seqtracktype_instance){
-        var _inst = seqStruct.activeTracks[_track].instanceID;
-        _inst.sprite_index = _spriteIndex;
-    }
-    else{
-        show_error("Err: track type is not an instance track.", true);
-    }
-}
-
-function Mirror_Seq(_elementSeq){
-    #region NOTICE:
-    /* The target sequence must have scalex, posx, rotation tracks.
-    Place this function at draw event of handler object which control sequence element.
-    Watch out time sequence order between handler object and target sequence,
-    there might be some time sequence order issue for instance tracks.
-    */
-    #endregion
-    var _x = layer_sequence_get_x(_elementSeq);
-    var seqStruct = layer_sequence_get_instance(_elementSeq);
-    var _activeTracks = seqStruct.activeTracks;
-    var _trackCount = array_length(_activeTracks);
-    var _inst, _type;
-    
-    if(!seqStruct.finished){
-        for(var _i=0; _i<_trackCount; _i++){
-            _type = seqStruct.sequence.tracks[_i].type;
-            if(_type == seqtracktype_graphic){
-                _activeTracks[_i].scalex *= -1;
-                _activeTracks[_i].posx *= -1;
-                _activeTracks[_i].rotation *= -1;
-            }
-            else if(_type == seqtracktype_instance){
-                _inst = _activeTracks[_i].instanceID;
-                _inst.x = _x - seqStruct.activeTracks[_i].posx;
-                _inst.image_xscale = -seqStruct.activeTracks[_i].scalex;
-                _inst.image_angle = -seqStruct.activeTracks[_i].rotation;
-            }
-        }
-    }
-    else{
-        if(!seqStruct.paused){
-            #region Explaination
-            /* Because When seq is finished, GM will not update active track anymore,
-            we don't need to inverse scalex, pos, rotation by every frame after seq element is finished.
-            Another fact is that "finished" is NOT equal to "paused",
-            so "paused" can be used as a flag to indicate whether active tracks had been mirrored at the final position,
-            and no need to create a "mirrored flag" for every finished seq element. */
-            #endregion
-            layer_sequence_pause(_elementSeq);
-            for(var _i=0; _i<_trackCount; _i++){
-                _type = seqStruct.sequence.tracks[_i].type;
-                if(_type == seqtracktype_graphic){
-                    _activeTracks[_i].scalex *= -1;
-                    _activeTracks[_i].posx *= -1;
-                    _activeTracks[_i].rotation *= -1;
-                }
-                else if(_type == seqtracktype_instance){
-                    _inst = _activeTracks[_i].instanceID;
-                    _inst.x = _x - seqStruct.activeTracks[_i].posx;
-                    _inst.image_xscale = -seqStruct.activeTracks[_i].scalex;
-                    _inst.image_angle = -seqStruct.activeTracks[_i].rotation;
-                }
-            }
-        }
-    }
-}
-
 function Clear_Layer_Element(_idLayer){
     if(!layer_exists(_idLayer)){show_error("Err:layer doesn't exist.",true);}
     
     var _eles = layer_get_all_elements(_idLayer);
     var _len = array_length(_eles);
+    if(_len<=0){return;}
+    
     var _type, _ele, _inst;
     for(var _i=_len-1; 0<=_i; _i--){
         _type = layer_get_element_type(_eles[_i]);
@@ -231,7 +163,7 @@ function Clear_Layer_Element(_idLayer){
             break;
         case layerelementtype_instance:
             _ele = array_pop(_eles);
-            layer_instance_get_instance(_ele);
+            _inst = layer_instance_get_instance(_ele);
             instance_destroy(_inst);
             break;
         case layerelementtype_sprite:

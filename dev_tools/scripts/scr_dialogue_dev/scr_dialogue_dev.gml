@@ -4,6 +4,7 @@ function Layer_Sequence_Tachi_Create(_layer, _x, _y, _sequenceId, _spr, _isMirro
     _seqStruct.sequence.event_step = method(_seqStruct.sequence, Mirror_Seq_All_Track);
     _seqStruct.sprite_index = _spr;
     _seqStruct.isMirrored = _isMirrored;
+    _seqStruct.stage = id;
 
     var _k = array_create(1);
     _k[0] = sequence_keyframe_new(seqtracktype_moment);
@@ -11,11 +12,16 @@ function Layer_Sequence_Tachi_Create(_layer, _x, _y, _sequenceId, _spr, _isMirro
     var _d = array_create(1);
     _d[0] = sequence_keyframedata_new(seqtracktype_moment);
     _d[0].channel = 0;
-    _d[0].event = method(_d[0], Seq_Switch_Sprite);
+    _d[0].event = method(_d[0], Event_0_Seq_Tachi);
     _k[0].channels = _d;
     _seqStruct.sequence.momentKeyframes = _k;
 
     return _ele;
+}
+
+function Event_0_Seq_Tachi(){
+    Seq_Switch_Sprite();
+    stage.Clear_Elements_Old();
 }
 
 function Seq_Switch_Sprite(){
