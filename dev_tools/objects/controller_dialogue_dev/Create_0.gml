@@ -199,7 +199,7 @@ Set_Printer = function(){
 
 
 #region initialization
-buttonSkip = instance_create_layer(1140,600,layerButtons,button_skip_dialogue_dev);
+buttonSkip = instance_create_layer(1210,660,layerButtons,button_skip_dialogue_dev);
 buttonSkip.ActionReleased = Play_Next;
 
 printer = instance_create_layer(x,y,layerText,printer_dialogue_dev);

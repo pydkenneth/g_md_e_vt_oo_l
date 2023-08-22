@@ -1,3 +1,5 @@
+Check_Printer_StateText();
+
 switch(prv.state){
 default:
 case "Waiting_Release":

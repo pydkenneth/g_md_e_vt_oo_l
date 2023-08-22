@@ -108,6 +108,7 @@ Update_Text_Buffer = function(){//private
     }
     else if(_lenB < _lenS){
         bufferSentence = bufferSentence + string_char_at(sentence, _lenB + 1 );
+        idCharCurrent = _lenB + 1;
         return;
     }
     else if(_lenS<_lenB){
